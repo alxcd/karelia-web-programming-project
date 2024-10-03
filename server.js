@@ -24,6 +24,19 @@ fetch('https://api.themoviedb.org/3/configuration', options)
     })
   .catch(err => console.error(err));
 
+// Middleware to check if the request is from a local IP address
+// copilot, thanks
+function checkLocalRequest(req, res, next) {
+  const localIps = ['127.0.0.1', '::1'];
+  if (localIps.includes(req.ip)) {
+    next();
+  } else {
+    res.status(403).send('Forbidden');
+  }
+}
+
+app.use(checkLocalRequest);
+
 app.get('/api/search', (req, res) => {
   const {query, type} = req.query;
   const url = `https://api.themoviedb.org/3/search/${type}?query=${encodeURIComponent(query)}`;
