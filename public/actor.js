@@ -12,13 +12,20 @@ class Actor { // wowza, this is like a component in React
         <input id="${this.containerId}_input" />
         <button type="submit">Search</button>
       </form>
-      <img id="${this.containerId}_photo" />
       <div id="${this.containerId}_name"></div>
+      <img id="${this.containerId}_photo" />
     `;
+  }
+
+  setInfo(name_string, photo_string) {
+    const actorName = document.getElementById(`${this.containerId}_name`);
+    const actorPhoto = document.getElementById(`${this.containerId}_photo`);
+    actorName.innerHTML = `${name_string}`
+    actorPhoto.src = `${photo_string}`
   }
 
   attachEventListeners() {
     const form = this.container.querySelector(`#${this.containerId}_form`);
-    form.addEventListener('submit', (event) => searchPerson(event, `${this.containerId}_input`));
+    form.addEventListener('submit', (event) => searchPerson(event, this));
   }
 }
