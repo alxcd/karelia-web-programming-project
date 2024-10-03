@@ -15,13 +15,14 @@ const options = {
   }
 };
 
-const configuration = fetch('https://api.themoviedb.org/3/configuration', options)
+let configuration;
+fetch('https://api.themoviedb.org/3/configuration', options)
   .then(response => response.json())
-  .then(response => console.log(response))
+  .then(data => {
+    console.log('Configuration data fetched:', data);
+    configuration = data;
+    })
   .catch(err => console.error(err));
-
-
-console.log(configuration);
 
 app.get('/api/search', (req, res) => {
   const {query, type} = req.query;
@@ -35,6 +36,10 @@ app.get('/api/search', (req, res) => {
     })
     .catch(err => console.error(err));  
 })
+
+app.get('/api/configuration', (req, res) => {
+  res.json(configuration);
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
