@@ -1,4 +1,5 @@
 const express = require('express');
+const fetch = require('fetch-retry')(global.fetch);
 const app = express();
 require('dotenv').config();
 
@@ -31,7 +32,7 @@ app.get('/api/search', (req, res) => {
   fetch(url, options)
     .then(response => response.json())
     .then(response => {
-      console.log(response);
+      // console.log(response);
       res.json(response);
     })
     .catch(err => console.error(err));  
@@ -42,16 +43,16 @@ app.get('/api/configuration', (req, res) => {
 });
 
 app.get('/api/person/:id', (req, res) => {
-  console.log(req.query);
+  // console.log(req.query);
   
   const { id } = req.params;
   const url = `https://api.themoviedb.org/3/person/${id}/movie_credits`;
-  console.log('requested id: ', id);
+  // console.log('requested id: ', id);
 
   fetch(url, options)
     .then(response => response.json())
     .then(response => {
-      console.log(response);
+      // console.log(response);
       res.json(response);
     })
     .catch(err => console.error(err));
@@ -60,12 +61,12 @@ app.get('/api/person/:id', (req, res) => {
 app.get('/api/movie/:id', (req, res) => {
   const { id } = req.params;
   const url = `https://api.themoviedb.org/3/movie/${id}/credits`;
-  console.log('requested id: ', id);
+  // console.log('requested id: ', id);
 
   fetch(url, options)
     .then(response => response.json())
     .then(response => {
-      console.log(response);
+      // console.log(response);
       res.json(response);
     })
     .catch(err => console.error(err));

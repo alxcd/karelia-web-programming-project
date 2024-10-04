@@ -43,3 +43,26 @@ button {
   padding: 5px;
   margin-top: 5px;
 }
+
+footer {
+  background-color: #f1f1f1;
+  padding: 10px;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+
+.attribution {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.attribution img {
+  height: 30px;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
