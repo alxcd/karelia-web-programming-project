@@ -1,0 +1,45 @@
+.actors {
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 5px;
+}
+
+.actor {
+  padding-right: 20px;
+}
+
+@media (max-width: 800px) {
+  .actors {
+    flex-wrap: wrap;
+  }
+}
+
+form {
+  padding: 5px;
+  align-items: center;
+}
+
+.actor-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.actor-name {
+  text-align: center;
+}
+
+.actor-photo {
+  margin-top: 10px;
+}
+
+input {
+  margin-right: 10px;
+}
+
+button {
+  padding: 5px;
+  margin-top: 5px;
+}

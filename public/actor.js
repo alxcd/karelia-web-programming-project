@@ -2,6 +2,8 @@ class Actor { // wowza, this is like a component in React
   constructor(containerId) {
     this.containerId = containerId;
     this.container = document.getElementById(containerId);
+    this.data = null;
+    this.photoUrl = null;
     this.render();
     this.attachEventListeners();
   }
@@ -11,17 +13,23 @@ class Actor { // wowza, this is like a component in React
       <form id="${this.containerId}_form">
         <input id="${this.containerId}_input" />
         <button type="submit">Search</button>
+        <div class="actor-info">
+          <div id="${this.containerId}_name" class="actor-name"></div>
+          <img id="${this.containerId}_photo" class="actor-photo"/>
+        </div>
       </form>
-      <div id="${this.containerId}_name"></div>
-      <img id="${this.containerId}_photo" />
     `;
   }
 
-  setInfo(name_string, photo_string) {
-    const actorName = document.getElementById(`${this.containerId}_name`);
+  setPhoto(photo_string) {
     const actorPhoto = document.getElementById(`${this.containerId}_photo`);
-    actorName.innerHTML = `${name_string}`
-    actorPhoto.src = `${photo_string}`
+    actorPhoto.src = `${photo_string}`;
+  }
+
+  setData(data) {
+    this.data = data;
+    const actorName = document.getElementById(`${this.containerId}_name`);
+    actorName.innerHTML = `${data.name}`;
   }
 
   attachEventListeners() {
