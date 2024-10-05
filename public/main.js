@@ -11,18 +11,25 @@ async function get6Degrees() {
   const sameMovies = await checkSameMovie(actor1.data.id, actor2.data.id);
   if (sameMovies) {
     console.log('Same movies found:', sameMovies);
-    return;
   }
-  const path = await makeActorsGraph(actor1.data.id, actor2.data.id);
-  for (let i = 0; i < path.length; i++)   {
-    if (i % 2 === 0) {
-      console.log(await get)
+  else {
+    const path = await makeActorsGraph(actor1.data.id, actor2.data.id);
+    if (path && path.length > 0) {
+      for (let i = 0; i < path.length; i++) {
+        if (i % 2 === 0) {
+          result = (await getPerson(path[i])).name;
+        }
+        else {
+          result = (await getMovie(path[i])).title;
+        }
+        console.log(result);
+      }
     }
+    else console.log("no movies found");
   }
-  
 }
-
 async function makeActorsGraph(id1, id2) {
+  console.log(123);
   let apiCallCount = 0;
 
   const graph = { actors: {}, movies: {} };
@@ -31,9 +38,11 @@ async function makeActorsGraph(id1, id2) {
   await updateGraphRecursively(graph, id1, 0, 1, apiCallCount);
   await updateGraphRecursively(graph, id2, 0, 1, apiCallCount);
 
-  const actorsPath = findShortestPath(graph, id1, id2);
+  const path = findShortestPath(graph, id1, id2);
+  console.log(path);
+  console.log(graph);
 
-  return actorsPath;
+  return path;
 }
 
 async function updateGraphRecursively(graph, actorId, depth = 0, maxDepth = 1, apiCallCount = 0) {
@@ -78,7 +87,7 @@ async function checkSameMovie(id1, id2) {
     movie1 => !movie1.genre_ids.some(id => id === 99) && movies2.cast.some(
       movie2 => movie1.id === movie2.id && !movie2.genre_ids.some(id => id === 99)));
   // excluding documentary movies
-  return sameMovies;
+  return sameMovies.length > 0 ? sameMovies : null;
 }
 
 
@@ -120,6 +129,5 @@ function findShortestPath(graph, startActorId, targetActorId) {
     }
   }
 
-  // If no path is found, return an empty array
-  return [];
+  return null;
 }

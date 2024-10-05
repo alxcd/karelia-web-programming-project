@@ -33,14 +33,26 @@ function getImageBaseUrl() {
     });
 }
 
-function getPersonMovieCredits(personId) {
+function getPerson(personId) {
   return fetch(`/api/person/${personId}`)
     .then(response => response.json())
     .catch(err => console.error(err));
 }
 
-function getMovieCredits(movieId) {
+function getPersonMovieCredits(personId) {
+  return fetch(`/api/person/${personId}/movie_credits`)
+    .then(response => response.json())
+    .catch(err => console.error(err));
+}
+
+function getMovie(movieId) {
   return fetch(`/api/movie/${movieId}`)
+    .then(response => response.json())
+    .catch(err => console.error(err));
+}
+
+function getMovieCredits(movieId) {
+  return fetch(`/api/movie/${movieId}/credits`)
     .then(response => response.json())
     .catch(err => console.error(err));
 }
