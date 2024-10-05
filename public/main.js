@@ -23,17 +23,17 @@ async function makeActorsGraph(id1, id2) {
 
   const graph = { actors: {}, movies: {} };
 
-  const movieCredits = movies1.cast.map(movie => {
+  const movieCredits = movies1.cast.slice(0,20).map(movie => {
     apiCallCount++;
     return getMovieCredits(movie.id);
   })
+  // top 20 credits from all movies of actor
   const movieCreditsArray = await Promise.all(movieCredits);
   
   console.log('api calls: ', apiCallCount);
   
   for (const movieCredits of movieCreditsArray) {
-    // console.log('movie id:', movie.id);
-    const actorMovies = movieCredits.cast.map(actor => {
+    const actorMovies = movieCredits.cast.slice(0,20).map(actor => {
       apiCallCount++;
       return getPersonMovieCredits(actor.id);
     });
