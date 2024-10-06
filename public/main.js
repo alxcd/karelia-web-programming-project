@@ -104,6 +104,7 @@ async function get6Degrees() {
     }
       else {
         console.log("no movies found");
+        updateChart([], []);
         myChart.setOption({ title: { text: "No connections found"}})
       }
   }
