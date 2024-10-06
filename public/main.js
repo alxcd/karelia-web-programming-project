@@ -61,7 +61,7 @@ async function get6Degrees() {
   
         const rightActor = await getPerson(rightActorId);
         const rightMovie = await getMovie(rightMovieId);
-        addToChart(chartData, chartLinks, rightActor, rightMovie, 600, yOffset + 1);
+        addToChart(chartData, chartLinks, rightActor, rightMovie, 600, yOffset);
         
         yOffset += 2;
       }
@@ -90,9 +90,22 @@ async function get6Degrees() {
         chartLinks.push({ source: rightActor.name, target: middleMovie.title });
         chartLinks.push({ source: leftActor.name, target: middleMovie.title });
       }
+
+      if (deque.length === 1) {
+        const middleActorId = deque.shift();
+
+        console.log(middleActorId);
+        const middleActor = await getPerson(middleActorId);
+        const middleActorPhoto = personBaseUrlPath + middleActor.profile_path;
+        chartData.push({ name: middleActor.name, x: 300, y: 300 + yOffset * 60, image: middleActorPhoto });
+        console.log(middleActor.name);
+      }
       updateChart(chartData, chartLinks);
     }
-      else console.log("no movies found");
+      else {
+        console.log("no movies found");
+        myChart.setOption({ title: { text: "No connections found"}})
+      }
   }
 }
 
