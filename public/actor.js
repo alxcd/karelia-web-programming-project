@@ -22,8 +22,9 @@ class Actor { // wowza, this is like a component in React
   }
 
   setPhoto(photo_string) {
+    this.photoUrl = photo_string;
     const actorPhoto = document.getElementById(`${this.containerId}_photo`);
-    actorPhoto.src = `${photo_string}`;
+    actorPhoto.src = photo_string;
   }
 
   setData(data) {
