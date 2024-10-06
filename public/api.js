@@ -23,11 +23,13 @@ function searchApi(query, type) {
     .catch(err => console.error(err));
 }
 
-function getImageBaseUrl() {
+function getImageBaseUrl(type) {
   return fetch('/api/configuration')
     .then(response => response.json())
     .then(data => {
-      const imageBaseUrl = `${data.images.secure_base_url}${data.images.profile_sizes[1]}`;
+      const imageBaseUrl = type === 'movie' 
+        ? `${data.images.secure_base_url}${data.images.poster_sizes[1]}`
+        : `${data.images.secure_base_url}${data.images.profile_sizes[1]}`;
       console.log('base image url', imageBaseUrl);
       return imageBaseUrl;
     });

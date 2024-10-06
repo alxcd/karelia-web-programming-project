@@ -19,22 +19,44 @@ function renderCheckButton() {
 async function get6Degrees() {
   console.log(actor1.data.id);
   console.log(actor2.data.id);
+  const movieBaseUrlPath = await getImageBaseUrl('movie');
+  const personBaseUrlPath = await getImageBaseUrl('person');
   const sameMovies = await checkSameMovie(actor1.data.id, actor2.data.id);
+  const chartData = [];
+  const chartLinks = [];
+
   if (sameMovies) {
     console.log('Same movies found:', sameMovies);
+    chartData.push({ name: actor1.data.name, x: 300, y: 300, image: actor1.photoUrl, });
+    chartData.push({ name: actor2.data.name, x: 800, y: 300, image: actor2.photoUrl, });
+    let i = 0;
+    for (const movie of sameMovies) {
+      const moviePoster = movieBaseUrlPath + movie.poster_path;
+      chartData.push({ name: movie.title, x: 550, y: 300 + i * 60, image: moviePoster});
+      i++;
+      chartLinks.push({ source: actor1.data.name, target: movie.title });
+      chartLinks.push({ source: actor2.data.name, target: movie.title });
+    }
+    updateChart(chartData, chartLinks);
   }
   else {
     const path = await makeActorsGraph(actor1.data.id, actor2.data.id);
     if (path && path.length > 0) {
       for (let i = 0; i < path.length; i++) {
         if (i % 2 === 0) {
-          result = (await getPerson(path[i])).name;
+          const actor = await getPerson(path[i]);
+          const actorPhoto = personBaseUrlPath + actor.profile_path;
+          chartData.push({ name: actor.name, x: 300, y: 300 + i * 60, image: actorPhoto, });
         }
         else {
-          result = (await getMovie(path[i])).title;
+          const movie = await getMovie(path[i]);
+          const moviePoster = movieBaseUrlPath + movie.poster_path;
+          chartData.push({ name: movie.title, x: 550, y: 300 + i * 60, image: moviePoster});
         }
+        const result = actor != null ? actor.name : movie.name;
         console.log(result);
       }
+      updateChart(chartData, chartLinks);
     }
     else console.log("no movies found");
   }
