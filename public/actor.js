@@ -30,6 +30,7 @@ class Actor { // wowza, this is like a component in React
     this.data = data;
     const actorName = document.getElementById(`${this.containerId}_name`);
     actorName.innerHTML = `${data.name}`;
+    renderCheckButton();
   }
 
   attachEventListeners() {

@@ -5,6 +5,17 @@ document.addEventListener('DOMContentLoaded', () => {
   actor2 = new Actor('actor2');
 });
 
+function renderCheckButton() {
+  if (document.getElementById('6degrees') == null && actor1.data && actor2.data) {
+    const actorsContainer = document.querySelector('.actors');
+    const checkButton = document.createElement('button');
+    checkButton.id = '6degrees';
+    checkButton.textContent = 'Check';
+    checkButton.onclick = () => get6Degrees();
+    actorsContainer.insertBefore(checkButton, actorsContainer.children[1]);
+  }
+}
+
 async function get6Degrees() {
   console.log(actor1.data.id);
   console.log(actor2.data.id);
@@ -28,8 +39,8 @@ async function get6Degrees() {
     else console.log("no movies found");
   }
 }
+
 async function makeActorsGraph(id1, id2) {
-  console.log(123);
   let apiCallCount = 0;
 
   const graph = { actors: {}, movies: {} };
@@ -47,6 +58,8 @@ async function makeActorsGraph(id1, id2) {
 
 async function updateGraphRecursively(graph, actorId, depth = 0, maxDepth = 1, apiCallCount = 0) {
   if (depth > maxDepth) return;
+  // smallest depth is actor > movies > actor
+  // so with depth 1 it should be actor > movies > actor > movies > actor
 
   const movies = await getPersonMovieCredits(actorId);
   const filteredMovies = movies.cast.filter(movie => !movie.genre_ids.includes(99));
@@ -64,6 +77,7 @@ async function updateGraphRecursively(graph, actorId, depth = 0, maxDepth = 1, a
       return getMovieCredits(movie.id);
     });
 
+    // get main(top5) cast of all actor's movies
     const movieCreditsArray = await Promise.all(movieCredits);
     const actorPromises = [];
     for (const movieCredits of movieCreditsArray) {
@@ -78,7 +92,6 @@ async function updateGraphRecursively(graph, actorId, depth = 0, maxDepth = 1, a
   }
 }
 
-
 async function checkSameMovie(id1, id2) {
   console.log('checking same movie of ids: ', id1, id2);
   const movies1 = await getPersonMovieCredits(id1);
@@ -90,8 +103,7 @@ async function checkSameMovie(id1, id2) {
   return sameMovies.length > 0 ? sameMovies : null;
 }
 
-
-// this a copypaste from copilot. sorry.
+// this a copypaste from copilot. sorry. might be even wrong
 function findShortestPath(graph, startActorId, targetActorId) {
   if (startActorId === targetActorId) return [startActorId];
 
