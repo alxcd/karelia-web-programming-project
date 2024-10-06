@@ -1,4 +1,6 @@
 let actor1, actor2;
+let movieBaseUrlPath, personBaseUrlPath;
+
 
 document.addEventListener('DOMContentLoaded', () => {
   actor1 = new Actor('actor1');
@@ -19,8 +21,8 @@ function renderCheckButton() {
 async function get6Degrees() {
   console.log(actor1.data.id);
   console.log(actor2.data.id);
-  const movieBaseUrlPath = await getImageBaseUrl('movie');
-  const personBaseUrlPath = await getImageBaseUrl('person');
+  movieBaseUrlPath = await getImageBaseUrl('movie');
+  personBaseUrlPath = await getImageBaseUrl('person');
   const sameMovies = await checkSameMovie(actor1.data.id, actor2.data.id);
   const chartData = [];
   const chartLinks = [];
@@ -41,25 +43,69 @@ async function get6Degrees() {
   }
   else {
     const path = await makeActorsGraph(actor1.data.id, actor2.data.id);
+    let j;
     if (path && path.length > 0) {
-      for (let i = 0; i < path.length; i++) {
-        if (i % 2 === 0) {
-          const actor = await getPerson(path[i]);
-          const actorPhoto = personBaseUrlPath + actor.profile_path;
-          chartData.push({ name: actor.name, x: 300, y: 300 + i * 60, image: actorPhoto, });
-        }
-        else {
-          const movie = await getMovie(path[i]);
-          const moviePoster = movieBaseUrlPath + movie.poster_path;
-          chartData.push({ name: movie.title, x: 550, y: 300 + i * 60, image: moviePoster});
-        }
-        const result = actor != null ? actor.name : movie.name;
-        console.log(result);
+      let deque = [...path];
+      let yOffset = 0;
+      // let previousLeftMovie, previousRightMovie
+  
+      while (deque.length >= 4) {
+        const leftActorId = deque.shift();
+        const leftMovieId = deque.shift();
+        const rightActorId = deque.pop();
+        const rightMovieId = deque.pop();
+  
+        const leftActor = await getPerson(leftActorId);
+        const leftMovie = await getMovie(leftMovieId);
+        addToChart(chartData, chartLinks, leftActor, leftMovie, 200, yOffset);
+  
+        const rightActor = await getPerson(rightActorId);
+        const rightMovie = await getMovie(rightMovieId);
+        addToChart(chartData, chartLinks, rightActor, rightMovie, 600, yOffset + 1);
+        
+        yOffset += 2;
+      }
+
+      if (deque.length === 3) {
+        const leftActorId = deque.shift();
+        const rightActorId = deque.pop();
+        const middleMovieId = deque.shift();
+
+        const leftActor = await getPerson(leftActorId);
+        const leftActorPhoto = personBaseUrlPath + leftActor.profile_path;
+        chartData.push({ name: leftActor.name, x: 200, y: yOffset * 60, image: leftActorPhoto });
+        console.log(leftActor.name);
+
+        const rightActor = await getPerson(rightActorId);
+        const rightActorPhoto = personBaseUrlPath + rightActor.profile_path;
+        chartData.push({ name: rightActor.name, x: 600, y: yOffset * 60, image: rightActorPhoto });
+        console.log(rightActor.name);
+
+        console.log(middleMovieId);
+        const middleMovie = await getMovie(middleMovieId);
+        const middleMoviePoster = movieBaseUrlPath + middleMovie.poster_path;
+        chartData.push({ name: middleMovie.title, x: 300, y: 300 + yOffset * 60, image: middleMoviePoster });
+        console.log(middleMovie.title);
+
+        chartLinks.push({ source: rightActor.name, target: middleMovie.title });
+        chartLinks.push({ source: leftActor.name, target: middleMovie.title });
       }
       updateChart(chartData, chartLinks);
     }
-    else console.log("no movies found");
+      else console.log("no movies found");
   }
+}
+
+function addToChart(chartData, chartLinks, actor, movie, x, yOffset) {
+  const leftActorPhoto = personBaseUrlPath + actor.profile_path;
+  chartData.push({ name: actor.name, x, y: yOffset * 60, image: leftActorPhoto });
+  console.log(actor.name);
+
+  const leftMoviePoster = movieBaseUrlPath + movie.poster_path;
+  chartData.push({ name: movie.title, x: x, y: (yOffset + 1) * 60, image: leftMoviePoster });
+  console.log(movie.title);
+
+  chartLinks.push({ source: actor.name, target: movie.title });
 }
 
 async function makeActorsGraph(id1, id2) {

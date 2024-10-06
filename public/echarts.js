@@ -28,7 +28,7 @@ option = {
       symbolSize: function (value, params) {
         return [params.data.name.length * 10, 30];
       },
-      roam: false,
+      roam: true,
       label: {
         show: true
       },
@@ -38,7 +38,7 @@ option = {
         fontSize: 20
       },
       itemStyle: {
-        color: '#0d253f'
+        color: '#add8e6'
       },
       lineStyle: {
         color: '#0d253f',
