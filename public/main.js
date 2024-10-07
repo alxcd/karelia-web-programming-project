@@ -126,7 +126,7 @@ async function makeActorsGraph(id1, id2) {
   let apiCallCount = 0;
 
   const graph = { actors: {}, movies: {} };
-
+  switchLoadingChart();
   // Update graph with initial actors' movies recursively
   await updateGraphRecursively(graph, id1, 0, 1, apiCallCount);
   await updateGraphRecursively(graph, id2, 0, 1, apiCallCount);
@@ -134,6 +134,7 @@ async function makeActorsGraph(id1, id2) {
   const path = findShortestPath(graph, id1, id2);
   console.log(path);
   console.log(graph);
+  switchLoadingChart();
 
   return path;
 }
@@ -224,4 +225,17 @@ function findShortestPath(graph, startActorId, targetActorId) {
   }
 
   return null;
+}
+
+function switchLoadingChart() {
+  const mainChart = document.getElementById('main');
+  const loadingChart = document.getElementById('loading');
+  if (mainChart.style.display == 'none') {
+    mainChart.style.display = 'block';
+    loadingChart.style.display = 'none';      
+  }
+  else {
+    mainChart.style.display = 'none';
+    loadingChart.style.display = 'block';  
+  }
 }

@@ -1,8 +1,7 @@
-var loadingDom = document.getElementById('loading');
-var loadingChart = echarts.init(loadingDom);
-var option;
+const loadingDom = document.getElementById('loading');
+const loadingChart = echarts.init(loadingDom);
 
-option = {
+const loadingChartOption = {
   graphic: {
     elements: [
       {
@@ -44,4 +43,4 @@ option = {
   }
 };
 
-option && loadingChart.setOption(option);
+loadingChartOption && loadingChart.setOption(loadingChartOption);

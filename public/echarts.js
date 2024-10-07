@@ -1,8 +1,7 @@
-var chartDom = document.getElementById('main');
-var myChart = echarts.init(chartDom);
-var option;
+const chartDom = document.getElementById('main');
+const myChart = echarts.init(chartDom);
 
-option = {
+const myChartOption = {
   title: {
     text: 'Connections'
   },
@@ -54,7 +53,7 @@ option = {
   ]
 };
 
-option && myChart.setOption(option);
+myChartOption && myChart.setOption(myChartOption);
 
 function updateChart(data, links) {
   myChart.setOption({
