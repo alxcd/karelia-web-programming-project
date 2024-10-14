@@ -5,6 +5,6 @@ This project uses The Movie DB API(https://www.themoviedb.org/), which requires 
 
 Steps to install:
 1. Clone repository or download release.
-2. `node install` in project's folder.
-3. `npm start`
-4. Webpage should be available at https://localhost:3000
+2. run `npm install` in project's folder.
+3. run `npm start`.
+4. Webpage should be available at http://localhost:3000
